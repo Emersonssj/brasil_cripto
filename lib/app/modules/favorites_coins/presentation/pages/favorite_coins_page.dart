@@ -6,6 +6,7 @@ import '../../../../shared/widgets/custom_card_widget.dart';
 import '../blocs/favorite_coins_bloc.dart';
 import '../blocs/favorite_coins_event.dart';
 import '../blocs/favorite_coins_state.dart';
+import '../widgets/favorite_item_widget.dart';
 
 class FavoriteCoinsPage extends StatefulWidget {
   const FavoriteCoinsPage({super.key});
@@ -71,20 +72,7 @@ class _FavoriteCoinsPageState extends State<FavoriteCoinsPage> {
                 child: CustomCardWidget(
                   child: Column(
                     children: state.coins
-                        .map(
-                          (coin) => Row(
-                            children: [
-                              Image.network(coin.large, width: 32, height: 32),
-                              SizedBox(width: 8),
-                              Text(coin.name),
-                              Expanded(child: SizedBox()),
-                              IconButton(
-                                onPressed: () => showConfirmationDialog(context, coin.id),
-                                icon: Icon(Icons.delete, color: Colors.red, size: 28),
-                              ),
-                            ],
-                          ),
-                        )
+                        .map((coin) => FavoriteItemWidget(coin: coin, onDeletePressed: showConfirmationDialog))
                         .toList(),
                   ),
                 ),
@@ -93,7 +81,7 @@ class _FavoriteCoinsPageState extends State<FavoriteCoinsPage> {
           }
 
           if (state is FavoriteCoinsErrorState) {
-            return Center(child: Text(state.message));
+            return Center(child: Text('Erro: ${state.message}'));
           }
 
           return SizedBox();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConectionsWidget extends StatelessWidget {
   const ConectionsWidget({super.key, required this.link});
@@ -6,6 +7,13 @@ class ConectionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> abrirUrl() async {
+      final Uri uri = Uri.parse(link);
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        throw 'Não foi possível abrir a URL: $link';
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -17,13 +25,16 @@ class ConectionsWidget extends StatelessWidget {
               style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Chip(
-              avatar: Icon(Icons.web, color: Colors.white, size: 16),
-              label: Text(
-                link,
-                style: const TextStyle(color: Colors.white, decoration: TextDecoration.underline),
+            InkWell(
+              onTap: () => abrirUrl(),
+              child: Chip(
+                avatar: Icon(Icons.web, color: Colors.white, size: 16),
+                label: Text(
+                  link,
+                  style: const TextStyle(color: Colors.white, decoration: TextDecoration.underline),
+                ),
+                backgroundColor: Colors.grey[700],
               ),
-              backgroundColor: Colors.grey[700],
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import '../../../../../core/services/http/exceptions/http_request_exception.dart';
 import '../../../domain/entities/coin_complement_entity.dart';
 
 abstract class CoinValuesPreviewState {}
@@ -13,5 +14,7 @@ class GetValuesPreviewSuccessState extends CoinValuesPreviewState {
 }
 
 class GetValuesPreviewErrorState extends CoinValuesPreviewState {
-  GetValuesPreviewErrorState();
+  GetValuesPreviewErrorState({required this.exception});
+
+  final HttpRequestException exception;
 }

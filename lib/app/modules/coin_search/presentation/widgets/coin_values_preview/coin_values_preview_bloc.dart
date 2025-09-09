@@ -20,7 +20,7 @@ class CoinValuesPreviewBloc extends Bloc<CoinValuesPreviewEvent, CoinValuesPrevi
     emit(
       result.fold(
         (success) => GetValuesPreviewSuccessState(previewValues: success),
-        (failure) => GetValuesPreviewErrorState(),
+        (failure) => GetValuesPreviewErrorState(exception: failure),
       ),
     );
   }

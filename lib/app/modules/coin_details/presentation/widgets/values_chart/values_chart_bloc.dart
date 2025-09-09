@@ -18,7 +18,10 @@ class ValuesChartBloc extends Bloc<ValuesChartEvent, ValuesChartState> {
     final result = await _repository.getChartInfo(event.id, event.days);
 
     emit(
-      result.fold((success) => GetChartInfoSuccessState(marketChart: success), (failure) => GetChartInfoErrorState()),
+      result.fold(
+        (success) => GetChartInfoSuccessState(marketChart: success),
+        (failure) => GetChartInfoErrorState(exception: failure),
+      ),
     );
   }
 }

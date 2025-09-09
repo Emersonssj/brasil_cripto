@@ -1,3 +1,4 @@
+import '../../../../core/services/http/exceptions/http_request_exception.dart';
 import '../../domain/entities/coin_entity.dart';
 
 abstract class CoinSearchState {}
@@ -13,5 +14,7 @@ class GetCoinsSuccessState extends CoinSearchState {
 }
 
 class GetCoinsErrorState extends CoinSearchState {
-  GetCoinsErrorState();
+  GetCoinsErrorState({required this.exception});
+
+  final HttpRequestException exception;
 }

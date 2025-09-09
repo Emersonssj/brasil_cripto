@@ -18,7 +18,12 @@ class CoinSearchBloc extends Bloc<CoinSearchEvent, CoinSearchState> {
 
     final result = await _repository.getCoins(event.query);
 
-    emit(result.fold((success) => GetCoinsSuccessState(coins: success), (failure) => GetCoinsErrorState()));
+    emit(
+      result.fold(
+        (success) => GetCoinsSuccessState(coins: success),
+        (failure) => GetCoinsErrorState(exception: failure),
+      ),
+    );
   }
 
   Future<void> _onClearList(ClearListEvent event, Emitter<CoinSearchState> emit) async {

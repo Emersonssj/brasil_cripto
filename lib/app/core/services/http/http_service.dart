@@ -1,6 +1,6 @@
 import 'package:result_dart/result_dart.dart';
 
-import 'exceptions/http_list_exceptions.dart' show HttpRequestException;
+import 'exceptions/http_request_exception.dart';
 import 'http_response.dart';
 
 abstract class HttpService {

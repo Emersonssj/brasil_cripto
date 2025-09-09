@@ -81,6 +81,10 @@ class _CoinSearchPageState extends State<CoinSearchPage> {
             }
           }
 
+          if (state is GetCoinsErrorState) {
+            return Center(child: Text('Erro: ${state.exception.userMessage}'));
+          }
+
           return SizedBox();
         },
       ),

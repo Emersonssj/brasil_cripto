@@ -8,6 +8,7 @@ import '../blocs/coin_details_bloc.dart';
 import '../blocs/coin_details_event.dart';
 import '../blocs/coin_details_state.dart';
 import '../widgets/conections_widget.dart';
+import '../widgets/description_widget.dart';
 import '../widgets/statistics_widget.dart';
 import '../widgets/values_chart/values_chart_widget.dart';
 
@@ -81,7 +82,10 @@ class _CoinDetailsPageState extends State<CoinDetailsPage> {
                   CustomCardWidget(child: ConectionsWidget(link: state.coin.links)),
                   SizedBox(height: 8),
                   Text('Descrição', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                  CustomCardWidget(child: Text(state.coin.description)),
+                  CustomCardWidget(
+                    padding: EdgeInsetsGeometry.only(left: 16, right: 16, top: 0, bottom: 16),
+                    child: DescriptionWidget(description: state.coin.description),
+                  ),
                   SizedBox(height: 8),
                 ],
               ),
@@ -90,7 +94,23 @@ class _CoinDetailsPageState extends State<CoinDetailsPage> {
         }
 
         if (state is GetCoinDetailsErrorState) {
-          return Scaffold(appBar: AppBar(title: Text('Error')));
+          return Scaffold(
+            appBar: AppBar(),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('Erro: ${state.exception.userMessage}'),
+                  SizedBox(height: 6),
+                  ElevatedButton(
+                    onPressed: () => _coinDetailsBloc.add(GetCoinDetailsEvent(widget.id)),
+                    child: Text('Recarregar'),
+                  ),
+                ],
+              ),
+            ),
+          );
         }
 
         return Center(child: Text('Erro desconhecido'));

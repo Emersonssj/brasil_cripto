@@ -16,6 +16,11 @@ class CoinDetailsBloc extends Bloc<CoinDetailsEvent, CoinDetailsState> {
 
     final result = await _repository.getCoinDetails(event.id);
 
-    emit(result.fold((success) => GetCoinDetailsSuccessState(coin: success), (failure) => GetCoinDetailsErrorState()));
+    emit(
+      result.fold(
+        (success) => GetCoinDetailsSuccessState(coin: success),
+        (failure) => GetCoinDetailsErrorState(exception: failure),
+      ),
+    );
   }
 }

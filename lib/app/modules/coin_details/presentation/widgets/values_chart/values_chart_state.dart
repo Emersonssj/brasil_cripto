@@ -1,3 +1,4 @@
+import '../../../../../core/services/http/exceptions/http_request_exception.dart';
 import '../../../domain/entities/market_chart_entity.dart';
 
 abstract class ValuesChartState {}
@@ -13,5 +14,7 @@ class GetChartInfoSuccessState extends ValuesChartState {
 }
 
 class GetChartInfoErrorState extends ValuesChartState {
-  GetChartInfoErrorState();
+  GetChartInfoErrorState({required this.exception});
+
+  final HttpRequestException exception;
 }

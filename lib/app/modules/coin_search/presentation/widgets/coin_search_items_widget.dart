@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../shared/widgets/custom_card_widget.dart';
 import '../../domain/entities/coin_entity.dart';
 import '../../../coin_details/presentation/pages/coin_details_page.dart';
-import 'coin_values_preview/coin_values_preview_widget.dart';
 import 'favorite_star_widget.dart';
 
 class CoinSearchItemWidget extends StatelessWidget {

@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
 import '../exceptions/handle_http_exception.dart';
-import '../exceptions/http_list_exceptions.dart';
+import '../exceptions/http_request_exception.dart';
+import '../exceptions/http_unhandled_exception.dart';
 import '../http_response.dart';
 import '../http_service.dart';
 

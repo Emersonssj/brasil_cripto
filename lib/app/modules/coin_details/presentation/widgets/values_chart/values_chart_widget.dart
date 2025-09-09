@@ -21,7 +21,7 @@ class _ValuesChartWidgetState extends State<ValuesChartWidget> {
   final ValuesChartBloc _coinDetailsBloc = ValuesChartBloc();
   final List<String> _timeRanges = ['1H', '24H', '7D', '1M', '3M', '1Y', 'MAX'];
   String _selectedDataType = 'Price';
-  String _selectedTimeRange = '24H';
+  String _selectedTimeRange = '7D';
 
   @override
   void initState() {
@@ -61,25 +61,21 @@ class _ValuesChartWidgetState extends State<ValuesChartWidget> {
     final firstDate = list.first.date.millisecondsSinceEpoch;
     final lastDate = list.last.date.millisecondsSinceEpoch;
     final duration = lastDate - firstDate;
-    // Tenta mostrar cerca de 4 a 5 labels no eixo X
     return duration / 4;
   }
 
   FlTitlesData _buildTitlesData(List<ChartDataPointEntity> list) {
     return FlTitlesData(
-      leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)), // Oculta eixo Y (preços)
-      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)), // Oculta eixo superior
-      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)), // Oculta eixo direito
-      // Configura os títulos do eixo X (datas)
+      leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
       bottomTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
           reservedSize: 30,
-          interval: _calculateInterval(list), // Calcula o intervalo dinamicamente
+          interval: _calculateInterval(list),
           getTitlesWidget: (value, meta) {
-            // Converte o timestamp (double) de volta para DateTime
             DateTime date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
-            // Formata a data para "dd/MM"
             String text = DateFormat('dd/MM').format(date);
 
             return SideTitleWidget(
@@ -94,24 +90,18 @@ class _ValuesChartWidgetState extends State<ValuesChartWidget> {
   }
 
   LineChartBarData _mainLine(List<ChartDataPointEntity> list) {
-    // Transforma nossa lista de ChartDataPoint em uma lista de FlSpot
     final spots = list.map((point) {
-      // O eixo X é o tempo (em milissegundos) e o eixo Y é o preço
       return FlSpot(point.date.millisecondsSinceEpoch.toDouble(), point.value);
     }).toList();
 
     return LineChartBarData(
       spots: spots,
-      isCurved: true, // Deixa a linha com curvas suaves
-      color: Colors.cyan, // Cor da linha
-      barWidth: 3,
-      isStrokeCapRound: true,
-      dotData: FlDotData(show: false), // Oculta os pontos na linha
-      belowBarData: BarAreaData(
-        // Área preenchida abaixo da linha
-        show: true,
-        color: Colors.cyan.withOpacity(0.2),
-      ),
+      isCurved: true,
+      color: Colors.orange,
+      barWidth: 2,
+      isStrokeCapRound: false,
+      dotData: FlDotData(show: false),
+      belowBarData: BarAreaData(show: true, color: const Color.fromARGB(33, 255, 153, 0)),
     );
   }
 
@@ -121,15 +111,34 @@ class _ValuesChartWidgetState extends State<ValuesChartWidget> {
       getTouchedSpotIndicator: (barData, spotIndexes) {
         return spotIndexes.map((spotIndex) {
           return TouchedSpotIndicatorData(
-            FlLine(color: Colors.white.withOpacity(0.5), strokeWidth: 2),
+            FlLine(color: Colors.orange, strokeWidth: 1),
             FlDotData(
               getDotPainter: (spot, percent, barData, index) {
-                return FlDotCirclePainter(radius: 6, color: Colors.white, strokeWidth: 2, strokeColor: Colors.cyan);
+                return FlDotCirclePainter(radius: 5, color: Colors.white, strokeWidth: 1, strokeColor: Colors.orange);
               },
             ),
           );
         }).toList();
       },
+      touchTooltipData: LineTouchTooltipData(
+        getTooltipItems: (touchedSpots) {
+          return touchedSpots.map((touchedSpot) {
+            final textStyle = TextStyle(
+              color: touchedSpot.bar.gradient?.colors.first ?? Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            );
+            final double priceValue = touchedSpot.y;
+            final NumberFormat currencyFormatter = NumberFormat.currency(
+              locale: 'en_US',
+              symbol: '\$',
+              decimalDigits: 2,
+            );
+            final String formattedPrice = currencyFormatter.format(priceValue);
+            return LineTooltipItem(formattedPrice, textStyle);
+          }).toList();
+        },
+      ),
     );
   }
 
@@ -180,31 +189,36 @@ class _ValuesChartWidgetState extends State<ValuesChartWidget> {
               }
 
               if (state is GetChartInfoSuccessState) {
-                return Visibility(
-                  visible: _selectedDataType == 'Price',
-                  replacement: LineChart(
-                    LineChartData(
-                      lineBarsData: [_mainLine(state.marketChart.marketCaps)],
-                      lineTouchData: _buildLineTouchData(state.marketChart.marketCaps),
-                      titlesData: _buildTitlesData(state.marketChart.marketCaps),
-                      gridData: FlGridData(drawHorizontalLine: true, drawVerticalLine: false),
-                      borderData: FlBorderData(show: false),
-                    ),
-                  ),
-                  child: LineChart(
-                    LineChartData(
-                      lineBarsData: [_mainLine(state.marketChart.prices)],
-                      lineTouchData: _buildLineTouchData(state.marketChart.prices),
-                      titlesData: _buildTitlesData(state.marketChart.prices),
-                      gridData: FlGridData(drawHorizontalLine: true, drawVerticalLine: false),
-                      borderData: FlBorderData(show: false),
-                    ),
+                var marketChart = LineChart(
+                  LineChartData(
+                    lineBarsData: [_mainLine(state.marketChart.marketCaps)],
+                    lineTouchData: _buildLineTouchData(state.marketChart.marketCaps),
+                    titlesData: _buildTitlesData(state.marketChart.marketCaps),
+                    gridData: FlGridData(drawHorizontalLine: true, drawVerticalLine: false),
+                    borderData: FlBorderData(show: false),
                   ),
                 );
+
+                var priceChart = LineChart(
+                  LineChartData(
+                    lineBarsData: [_mainLine(state.marketChart.prices)],
+                    lineTouchData: _buildLineTouchData(state.marketChart.prices),
+                    titlesData: _buildTitlesData(state.marketChart.prices),
+                    gridData: FlGridData(drawHorizontalLine: true, drawVerticalLine: false),
+                    borderData: FlBorderData(show: false),
+                  ),
+                );
+
+                return Visibility(visible: _selectedDataType == 'Price', replacement: marketChart, child: priceChart);
               }
 
               if (state is GetChartInfoErrorState) {
-                return Center(child: Text('Erro, tentar novamente'));
+                return Center(
+                  child: ElevatedButton(
+                    onPressed: () => _coinDetailsBloc.add(GetChartInfoEvent(widget.id, _selectedTimeRange)),
+                    child: Text('reload'),
+                  ),
+                );
               }
 
               return SizedBox();
