@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../../domain/entities/coin_market_data_entity.dart';
 
 class StatisticsWidget extends StatelessWidget {
-  const StatisticsWidget({super.key});
+  const StatisticsWidget({super.key, required this.marketData});
+
+  final CoinMarketDataEntity marketData;
 
   @override
   Widget build(BuildContext context) {
     final data = {
-      'Valor de mercado': 2226651219589,
-      'Fornecimento circulante': '19,9 milhões',
-      'Avaliação totalmente diluída': 2226651219589,
-      'Fornecimento total': '19,9 milhões',
-      'Cap. de Mercado/Relação FDV': 1,
-      'Suprimento Máximo': '21,0 milhões',
-      'Volume de negócios': 28274348819,
-      'Adicionada à Lista de Observação': 2169885,
+      'Valor de mercado': marketData.marketCapUsd,
+      'Volume (24h)': marketData.totalVolumeUsd,
+      'Máximo (24h)': marketData.high24hUsd,
+      'Mínimo (24h)': marketData.low24hUsd,
+      'Fornecimento circulante': marketData.circulatingSupply,
     };
+
+    final dataEntries = data.entries.toList();
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -26,13 +31,24 @@ class StatisticsWidget extends StatelessWidget {
       ),
       itemCount: data.length,
       itemBuilder: (context, index) {
+        final entry = dataEntries[index];
+        final String title = entry.key;
+        final double value = entry.value;
+
+        final currencyFormatter = NumberFormat.compactSimpleCurrency(locale: 'en_US');
+        final numberFormatter = NumberFormat.compact(locale: 'en_US');
+
+        final String formattedValue = title == 'Fornecimento circulante'
+            ? numberFormatter.format(value)
+            : currencyFormatter.format(value);
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('teste', style: const TextStyle(color: Colors.grey, fontSize: 14)),
+            Text(title, style: const TextStyle(color: Colors.grey, fontSize: 14)),
             const SizedBox(height: 4),
             Text(
-              'teste',
+              formattedValue,
               style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ],

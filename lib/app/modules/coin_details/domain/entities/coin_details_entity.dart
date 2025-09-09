@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'entities.dart';
+
 class CoinDetailsEntity extends Equatable {
   final String id;
   final String symbol;
@@ -8,6 +10,7 @@ class CoinDetailsEntity extends Equatable {
   final String links;
   final String image;
   final int marketCapRank;
+  final CoinMarketDataEntity coinMarketData;
 
   const CoinDetailsEntity({
     required this.id,
@@ -17,8 +20,9 @@ class CoinDetailsEntity extends Equatable {
     required this.links,
     required this.image,
     required this.marketCapRank,
+    required this.coinMarketData,
   });
 
   @override
-  List<Object?> get props => [id, symbol, name, description, links, image, marketCapRank];
+  List<Object?> get props => [id, symbol, name, description, links, image, marketCapRank, coinMarketData];
 }

@@ -5,5 +5,5 @@ import '../entities/entities.dart';
 
 abstract class CoinDetailsRepository {
   AsyncResult<CoinDetailsEntity, HttpRequestException> getCoinDetails(String id);
-  AsyncResult<GraphicInfoEntity, HttpRequestException> getGraphicInfo(String id, String days);
+  AsyncResult<MarketChartEntity, HttpRequestException> getChartInfo(String id, String days);
 }

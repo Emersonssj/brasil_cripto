@@ -8,11 +8,11 @@ import '../entities/entities.dart';
 import 'coin_details_repository.dart';
 
 class CoinDetailsRepositoryImpl implements CoinDetailsRepository {
-  CoinDetailsRepositoryImpl(this.datasource, this.coinDetailsMapper, this.graphicInfoMapper);
+  CoinDetailsRepositoryImpl(this.datasource, this.coinDetailsMapper, this.marketChartMapper);
 
   final CoinDetailsDatasource datasource;
   final Mapper<CoinDetailsEntity, CoinDetailsModel> coinDetailsMapper;
-  final Mapper<GraphicInfoEntity, GraphicInfoModel> graphicInfoMapper;
+  final Mapper<MarketChartEntity, MarketChartModel> marketChartMapper;
 
   @override
   AsyncResult<CoinDetailsEntity, HttpRequestException> getCoinDetails(String id) async {
@@ -22,9 +22,9 @@ class CoinDetailsRepositoryImpl implements CoinDetailsRepository {
   }
 
   @override
-  AsyncResult<GraphicInfoEntity, HttpRequestException> getGraphicInfo(String id, String days) async {
-    var result = datasource.getGraphicInfo(id, days);
+  AsyncResult<MarketChartEntity, HttpRequestException> getChartInfo(String id, String days) async {
+    var result = datasource.getChartInfo(id, days);
 
-    return result.fold((success) => Success(graphicInfoMapper.toEntity(success)), (failure) => Failure(failure));
+    return result.fold((success) => Success(marketChartMapper.toEntity(success)), (failure) => Failure(failure));
   }
 }

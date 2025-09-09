@@ -3,9 +3,9 @@ import '../../core/services/http/http_service.dart';
 import '../../shared/mapper/mapper.dart';
 import 'data/datasources/coin_search_datasource.dart';
 import 'data/datasources/coin_search_datasource_impl.dart';
-import 'data/mappers/coin_mapper.dart';
-import 'data/models/coin_model.dart';
-import 'domain/entities/coin_entity.dart';
+import 'data/mappers/mappers.dart';
+import 'data/models/models.dart';
+import 'domain/entities/entities.dart';
 import 'domain/repositories/coin_search_repository.dart';
 import 'domain/repositories/coin_search_repository_impl.dart';
 import 'presentation/blocs/coin_search_bloc.dart';
@@ -26,6 +26,7 @@ class CoinSearchDependencyInjection {
 
   static void _loadMappers() {
     registerDependency<Mapper<CoinEntity, CoinModel>>(() => CoinMapper());
+    registerDependency<Mapper<CoinComplementEntity, CoinComplementModel>>(() => CoinComplementMapper());
   }
 
   static void _loadRepositories() {
@@ -33,6 +34,7 @@ class CoinSearchDependencyInjection {
       () => CoinSearchRepositoryImpl(
         getDependency<CoinSearchDatasource>(),
         getDependency<Mapper<CoinEntity, CoinModel>>(),
+        getDependency<Mapper<CoinComplementEntity, CoinComplementModel>>(),
       ),
     );
   }

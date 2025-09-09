@@ -3,8 +3,7 @@ import 'package:result_dart/result_dart.dart';
 import '../../../../core/services/http/exceptions/http_request_exception.dart';
 import '../../../../core/services/http/exceptions/http_unhandled_exception.dart';
 import '../../../../core/services/http/http_service.dart';
-import '../../../coin_details/data/models/coin_details_model.dart';
-import '../../../coin_details/data/models/graphic_info_model.dart';
+import '../models/models.dart';
 import 'coin_details_datasource.dart';
 
 class CoinDetailsDatasourceImpl implements CoinDetailsDatasource {
@@ -27,12 +26,12 @@ class CoinDetailsDatasourceImpl implements CoinDetailsDatasource {
   }
 
   @override
-  AsyncResult<GraphicInfoModel, HttpRequestException> getGraphicInfo(String id, String days) async {
-    final result = await _api.get('/coins/$id/market_chart', queryParams: {'days': days});
+  AsyncResult<MarketChartModel, HttpRequestException> getChartInfo(String id, String days) async {
+    final result = await _api.get('/coins/$id/market_chart', queryParams: {'days': days, 'vs_currency': 'usd'});
 
     return result.flatMap((response) {
       try {
-        final coins = GraphicInfoModel.fromJson(response.content['data']);
+        final coins = MarketChartModel.fromJson(response.content);
         return Success(coins);
       } catch (e) {
         return Failure(HttpUnhandledException.unknown());

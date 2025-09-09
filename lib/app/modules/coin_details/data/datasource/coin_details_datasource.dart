@@ -5,5 +5,5 @@ import '../models/models.dart';
 
 abstract class CoinDetailsDatasource {
   AsyncResult<CoinDetailsModel, HttpRequestException> getCoinDetails(String id);
-  AsyncResult<GraphicInfoModel, HttpRequestException> getGraphicInfo(String id, String days);
+  AsyncResult<MarketChartModel, HttpRequestException> getChartInfo(String id, String days);
 }

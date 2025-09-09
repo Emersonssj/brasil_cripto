@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
-import '../../../environment/environment.dart';
 import '../exceptions/handle_http_exception.dart';
 import '../exceptions/http_list_exceptions.dart';
 import '../http_response.dart';
@@ -126,7 +125,7 @@ class HttpServiceImpl implements HttpService {
   Map<String, dynamic> getHeaders(Map<String, dynamic>? queryHeaders) {
     Map<String, dynamic> newHeader = queryHeaders ?? {};
 
-    newHeader.addAll({'vs_currency': 'brl', 'x-cg-pro-api-key': Environment.apiKey});
+    newHeader.addAll({'vs_currency': 'usd'}); //'x-cg-pro-api-key': Environment.apiKey
 
     return newHeader;
   }

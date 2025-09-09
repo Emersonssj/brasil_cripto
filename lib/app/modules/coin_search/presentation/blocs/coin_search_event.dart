@@ -5,3 +5,5 @@ class GetCoinsEvent extends CoinSearchEvent {
 
   final String query;
 }
+
+class ClearListEvent extends CoinSearchEvent {}

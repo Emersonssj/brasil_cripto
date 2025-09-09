@@ -1,9 +1,9 @@
-import 'package:brasil_cripto/app/modules/coin_search/presentation/blocs/coin_search_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/dependency_injection/dependency_injection.dart';
 import '../blocs/coin_search_bloc.dart';
+import '../blocs/coin_search_event.dart';
 import '../blocs/coin_search_state.dart';
 import '../widgets/coin_search_items_widget.dart';
 
@@ -18,9 +18,23 @@ class _CoinSearchPageState extends State<CoinSearchPage> {
   final TextEditingController _searchController = TextEditingController();
   late final CoinSearchBloc _coinSearchBloc;
 
+  void _onSearchChanged(String query) {
+    setState(() {
+      if (query != '') _coinSearchBloc.add(GetCoinsEvent(query));
+    });
+  }
+
+  void _clearSearchField() {
+    setState(() {
+      _searchController.clear();
+      _coinSearchBloc.add(ClearListEvent());
+    });
+  }
+
   @override
   void initState() {
     _coinSearchBloc = getDependency<CoinSearchBloc>();
+    _coinSearchBloc.add(ClearListEvent());
     super.initState();
   }
 
@@ -30,11 +44,7 @@ class _CoinSearchPageState extends State<CoinSearchPage> {
       appBar: AppBar(
         toolbarHeight: 70,
         title: TextField(
-          onChanged: (value) {
-            setState(() {
-              if (value != '') _coinSearchBloc.add(GetCoinsEvent(value));
-            });
-          },
+          onChanged: _onSearchChanged,
           controller: _searchController,
           decoration: InputDecoration(
             hintText: 'Pesquisar moeda',
@@ -46,11 +56,7 @@ class _CoinSearchPageState extends State<CoinSearchPage> {
                 ? null
                 : IconButton(
                     icon: const Icon(Icons.clear, color: Colors.grey),
-                    onPressed: () {
-                      setState(() {
-                        _searchController.clear();
-                      });
-                    },
+                    onPressed: _clearSearchField,
                   ),
           ),
           style: const TextStyle(color: Colors.white),
@@ -65,7 +71,7 @@ class _CoinSearchPageState extends State<CoinSearchPage> {
 
           if (state is GetCoinsSuccessState) {
             if (state.coins.isEmpty) {
-              return Center(child: Text('Não foram encontradas moedas'));
+              return Center(child: Text('Nenhuma criptomoeda encontrada'));
             } else {
               return Visibility(
                 visible: _searchController.text != '',

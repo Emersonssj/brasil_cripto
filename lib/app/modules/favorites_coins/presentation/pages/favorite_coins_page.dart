@@ -75,6 +75,7 @@ class _FavoriteCoinsPageState extends State<FavoriteCoinsPage> {
                           (coin) => Row(
                             children: [
                               Image.network(coin.large, width: 32, height: 32),
+                              SizedBox(width: 8),
                               Text(coin.name),
                               Expanded(child: SizedBox()),
                               IconButton(

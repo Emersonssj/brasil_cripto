@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomCardWidget extends StatelessWidget {
-  const CustomCardWidget({super.key, this.title, required this.child});
+  const CustomCardWidget({super.key, this.title, required this.child, this.padding = const EdgeInsets.all(16.0)});
 
   final String? title;
   final Widget child;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class CustomCardWidget extends StatelessWidget {
         ),
 
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: padding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

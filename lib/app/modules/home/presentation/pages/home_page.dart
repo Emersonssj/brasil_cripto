@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../coin_details/presentation/pages/coin_details_page.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -19,16 +17,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('BrasilCripto')),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const CoinDetailsPage(id: 'bitcoin')));
-            },
-            child: Text('a'),
-          ),
-        ],
-      ),
+      body: Column(children: []),
     );
   }
 }

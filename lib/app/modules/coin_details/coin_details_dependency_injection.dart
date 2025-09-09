@@ -25,8 +25,14 @@ class CoinDetailsDependencyInjection {
   }
 
   static void _loadMappers() {
-    registerDependency<Mapper<CoinDetailsEntity, CoinDetailsModel>>(() => CoinDetailsMapper());
-    registerDependency<Mapper<GraphicInfoEntity, GraphicInfoModel>>(() => GraphicInfoMapper());
+    registerDependency<Mapper<CoinMarketDataEntity, CoinMarketDataModel>>(() => CoinMarketDataMapper());
+    registerDependency<Mapper<CoinDetailsEntity, CoinDetailsModel>>(
+      () => CoinDetailsMapper(getDependency<Mapper<CoinMarketDataEntity, CoinMarketDataModel>>()),
+    );
+    registerDependency<Mapper<ChartDataPointEntity, ChartDataPointModel>>(() => ChartDataPointMapper());
+    registerDependency<Mapper<MarketChartEntity, MarketChartModel>>(
+      () => MarketChartMapper(getDependency<Mapper<ChartDataPointEntity, ChartDataPointModel>>()),
+    );
   }
 
   static void _loadRepositories() {
@@ -34,7 +40,7 @@ class CoinDetailsDependencyInjection {
       () => CoinDetailsRepositoryImpl(
         getDependency<CoinDetailsDatasource>(),
         getDependency<Mapper<CoinDetailsEntity, CoinDetailsModel>>(),
-        getDependency<Mapper<GraphicInfoEntity, GraphicInfoModel>>(),
+        getDependency<Mapper<MarketChartEntity, MarketChartModel>>(),
       ),
     );
   }
